@@ -48,6 +48,7 @@
     <Compile Include="SimpleLogger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LICENSE" />
     <None Include="SaveLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

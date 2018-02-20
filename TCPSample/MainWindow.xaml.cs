@@ -37,8 +37,7 @@ namespace TCPSample {
                 client = new TCPInfrastructure.Client(@"./Setting.config", @"ClientDefault");
                 client.SetLog(log);
                 client.Start();
-            }
-            else {
+            } else {
                 dispatcher = new TCPInfrastructure.Dispatcher(@"./Setting.config", @"DispatcherDefault");
                 dispatcher.SetLog(log);
                 dispatcher.Start();

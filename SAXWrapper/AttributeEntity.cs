@@ -1,4 +1,4 @@
-﻿/*
+/*
 *
 * AttributeEntity.cs
 *
@@ -23,29 +23,37 @@ namespace SAXWrapper {
 
     public class AttributeEntity {
 
-        #region -- プロパティ --
+        #region -- Private fields --
 
         private string attrName;
+
+        private string attrValue;
+
+        #endregion -- Private fields --
+
+        #region -- Setter --
 
         public void SetAttrName(string arg) {
             attrName = arg;
         }
 
-        public string GetAttrName() {
-            return attrName;
-        }
-
-        private string attrValue;
-
         public void SetAttrValue(string arg) {
             attrValue = arg;
+        }
+
+        #endregion -- Setter --
+
+        #region -- Getter --
+
+        public string GetAttrName() {
+            return attrName;
         }
 
         public string GetAttrValue() {
             return attrValue;
         }
 
-        #endregion -- プロパティ --
+        #endregion -- Getter --
 
         public AttributeEntity() {
         }
@@ -55,8 +63,7 @@ namespace SAXWrapper {
         public bool NameEquals(string arg) {
             if (attrName.Equals(arg)) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -64,8 +71,7 @@ namespace SAXWrapper {
         public bool ValueEquals(string arg) {
             if (attrValue.Equals(arg)) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -75,6 +81,10 @@ namespace SAXWrapper {
             ret.SetAttrName(attrName);
             ret.SetAttrValue(attrValue);
             return ret;
+        }
+
+        public override string ToString() {
+            return attrName + @"=" + @"""" + attrValue + @"""";
         }
 
         #endregion -- メソッド --

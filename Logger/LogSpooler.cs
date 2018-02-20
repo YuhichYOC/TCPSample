@@ -127,8 +127,7 @@ namespace Logger {
         public void AppendError(string message) {
             try {
                 errorLogLines.Add(message);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 logClient = log4net.LogManager.GetLogger(@"LogOperatorLog");
                 logClient.Error(@"Exception during AppendError\r\n" + message, ex);
             }
@@ -137,8 +136,7 @@ namespace Logger {
         public void AppendWarn(string message) {
             try {
                 warnLogLines.Add(message);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 logClient = log4net.LogManager.GetLogger(@"LogOperatorLog");
                 logClient.Error(@"Exception during AppendWarn\r\n" + message, ex);
             }
@@ -147,8 +145,7 @@ namespace Logger {
         public void AppendInfo(string message) {
             try {
                 infoLogLines.Add(message);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 logClient = log4net.LogManager.GetLogger(@"LogOperatorLog");
                 logClient.Error(@"Exception during AppendInfo\r\n" + message, ex);
             }

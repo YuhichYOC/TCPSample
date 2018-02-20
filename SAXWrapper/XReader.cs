@@ -1,8 +1,8 @@
-﻿/*
+/*
 *
-* SettingReader.cs
+* XReader.cs
 *
-* Copyright 2016 Yuichi Yoshii
+* Copyright 2018 Yuichi Yoshii
 *     吉井雄一 @ 吉井産業  you.65535.kir@gmail.com
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,23 +24,37 @@ using System.Xml;
 
 namespace SAXWrapper {
 
-    public class SettingReader {
+    public class XReader {
 
-        #region -- プロパティ --
+        #region -- Private Fields --
 
         private string directory;
+
+        private string fileName;
+
+        private NodeEntity node;
+
+        private int depth;
+
+        private int currentNodeId;
+
+        #endregion -- Private Fields --
+
+        #region -- Setter --
 
         public void SetDirectory(string arg) {
             directory = arg;
         }
 
-        private string fileName;
-
         public void SetFileName(string arg) {
             fileName = arg;
         }
 
-        private string GetFullPath() {
+        #endregion -- Setter --
+
+        #region -- Getter --
+
+        protected string GetFullPath() {
             if (string.IsNullOrEmpty(directory)) {
                 throw new ArgumentException(@"Directory is not assigned.");
             }
@@ -50,24 +64,18 @@ namespace SAXWrapper {
             return directory + @"\" + fileName;
         }
 
-        private NodeEntity node;
-
         public NodeEntity GetNode() {
             return node;
         }
 
-        private int depth;
+        #endregion -- Getter --
 
-        private int currentNodeId;
-
-        #endregion -- プロパティ --
-
-        public SettingReader() {
-            depth = 0;
-            currentNodeId = 0;
+        public XReader() {
+            depth = 1;
+            currentNodeId = 1;
         }
 
-        #region -- メソッド --
+        #region -- Public Methods --
 
         public void Parse() {
             System.IO.StreamReader sr = new System.IO.StreamReader(GetFullPath());
@@ -75,11 +83,17 @@ namespace SAXWrapper {
             settings.DtdProcessing = DtdProcessing.Parse;
             XmlReader reader = XmlReader.Create(sr, settings);
             try {
+                node = new NodeEntity();
+                node.SetNodeName(fileName);
+                node.SetNodeID(0);
+                node.SetDepth(0);
+                node.Comment(false);
                 while (reader.Read()) {
                     ParseElement(reader);
                     ParseText(reader);
                     ParseCDATA(reader);
                     ParseEndElement(reader);
+                    ParseComment(reader);
                 }
             } catch (Exception) {
                 throw;
@@ -93,51 +107,74 @@ namespace SAXWrapper {
             }
         }
 
-        private void ParseElement(XmlReader reader) {
-            if (reader.NodeType != XmlNodeType.Element) { return; }
+        protected void ParseElement(XmlReader reader) {
+            if (reader.NodeType != XmlNodeType.Element) {
+                return;
+            }
 
             string nodeName = reader.Name;
             NodeEntity newNode = new NodeEntity();
             newNode.SetNodeName(nodeName);
             newNode.SetNodeID(currentNodeId);
+            newNode.SetDepth(depth);
+            newNode.Comment(false);
             currentNodeId++;
+            node.FindTail(depth).AddChild(newNode);
             ParseAttributes(reader, newNode);
-            if (currentNodeId == 1) {
-                node = newNode;
-            } else {
-                node.FindTail(depth).AddChild(newNode);
-            }
+
             if (!reader.IsEmptyElement) {
                 depth++;
             }
         }
 
-        private void ParseText(XmlReader reader) {
-            if (reader.NodeType != XmlNodeType.Text) { return; }
+        protected void ParseText(XmlReader reader) {
+            if (reader.NodeType != XmlNodeType.Text) {
+                return;
+            }
 
             string value = reader.Value;
             if (!string.IsNullOrEmpty(value)) {
-                node.FindTail(depth).SetNodeValue(value);
+                node.FindTail(depth).SetNodeValue(value.Trim());
             }
         }
 
-        private void ParseCDATA(XmlReader reader) {
-            if (reader.NodeType != XmlNodeType.CDATA) { return; }
+        protected void ParseCDATA(XmlReader reader) {
+            if (reader.NodeType != XmlNodeType.CDATA) {
+                return;
+            }
 
             string value = reader.Value;
             if (!string.IsNullOrEmpty(value)) {
-                node.FindTail(depth).SetNodeValue(value);
+                node.FindTail(depth).SetNodeValue(value.Trim());
             }
         }
 
-        private void ParseEndElement(XmlReader reader) {
-            if (reader.NodeType != XmlNodeType.EndElement) { return; }
+        protected void ParseEndElement(XmlReader reader) {
+            if (reader.NodeType != XmlNodeType.EndElement) {
+                return;
+            }
+
             depth--;
         }
 
-        #endregion -- メソッド --
+        protected void ParseComment(XmlReader reader) {
+            if (reader.NodeType != XmlNodeType.Comment) {
+                return;
+            }
 
-        #region -- private --
+            NodeEntity newNode = new NodeEntity();
+            newNode.SetNodeName(@"Comment");
+            newNode.SetNodeID(currentNodeId);
+            newNode.SetDepth(depth);
+            newNode.SetNodeValue(reader.Value.Trim());
+            newNode.Comment(true);
+            currentNodeId++;
+            node.FindTail(depth).AddChild(newNode);
+        }
+
+        #endregion -- Public Methods --
+
+        #region -- Private Methods --
 
         private void ParseAttributes(XmlReader reader, NodeEntity currentNode) {
             int iLoopCount = reader.AttributeCount;
@@ -152,6 +189,6 @@ namespace SAXWrapper {
             }
         }
 
-        #endregion -- private --
+        #endregion -- Private Methods --
     }
 }

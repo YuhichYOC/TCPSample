@@ -72,7 +72,7 @@ namespace Logger {
         private void FlushError() {
             if (errorLogLines.Count > 0) {
                 StringBuilder message = new StringBuilder();
-                message.AppendLine(@"\r\n");
+                message.AppendLine();
                 int lastIndex = errorLogLines.Count - 1;
                 if (lastIndex > 0) {
                     for (int i = 0; i < lastIndex; i++) {
@@ -88,7 +88,7 @@ namespace Logger {
         private void FlushWarn() {
             if (warnLogLines.Count > 0) {
                 StringBuilder message = new StringBuilder();
-                message.AppendLine(@"\r\n");
+                message.AppendLine();
                 int lastIndex = warnLogLines.Count - 1;
                 if (lastIndex > 0) {
                     for (int i = 0; i < lastIndex; i++) {
@@ -104,7 +104,7 @@ namespace Logger {
         private void FlushInfo() {
             if (infoLogLines.Count > 0) {
                 StringBuilder message = new StringBuilder();
-                message.AppendLine(@"\r\n");
+                message.AppendLine();
                 int lastIndex = infoLogLines.Count - 1;
                 if (lastIndex > 0) {
                     for (int i = 0; i < lastIndex; i++) {

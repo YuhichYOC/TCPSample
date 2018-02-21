@@ -104,11 +104,11 @@ namespace TCPInfrastructure {
         }
 
         private void ApplySetting(string category) {
-            serverAddr = setting.GetNode().SubCategory(category).Attr(@"Server").GetNodeValue();
-            portNumber = int.Parse(setting.GetNode().SubCategory(category).Attr(@"Port").GetNodeValue());
-            clientName = setting.GetNode().SubCategory(category).Attr(@"ClientName").GetNodeValue();
-            clientId = int.Parse(setting.GetNode().SubCategory(category).Attr(@"ID").GetNodeValue());
-            messageLength = int.Parse(setting.GetNode().SubCategory(category).Attr(@"MessageLength").GetNodeValue());
+            serverAddr = setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"Server").GetNodeValue();
+            portNumber = int.Parse(setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"Port").GetNodeValue());
+            clientName = setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"ClientName").GetNodeValue();
+            clientId = int.Parse(setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"ID").GetNodeValue());
+            messageLength = int.Parse(setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"MessageLength").GetNodeValue());
         }
 
         #endregion -- Init --

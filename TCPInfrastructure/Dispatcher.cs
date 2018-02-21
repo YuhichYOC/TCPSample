@@ -80,10 +80,10 @@ namespace TCPInfrastructure {
         }
 
         private void ApplySetting(string category) {
-            dispatcherAddr = setting.GetNode().SubCategory(category).Attr(@"Dispatcher").GetNodeValue();
-            portNumber = int.Parse(setting.GetNode().SubCategory(category).Attr(@"Port").GetNodeValue());
-            dispatcherName = setting.GetNode().SubCategory(category).Attr(@"DispatcherName").GetNodeValue();
-            dispatcherId = int.Parse(setting.GetNode().SubCategory(category).Attr(@"ID").GetNodeValue());
+            dispatcherAddr = setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"Dispatcher").GetNodeValue();
+            portNumber = int.Parse(setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"Port").GetNodeValue());
+            dispatcherName = setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"DispatcherName").GetNodeValue();
+            dispatcherId = int.Parse(setting.GetNode().Find(@"SettingDef").SubCategory(category).Attr(@"ID").GetNodeValue());
         }
 
         #endregion -- Init --

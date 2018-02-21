@@ -110,7 +110,7 @@ namespace JobInfrastructure {
         }
 
         protected NodeEntity CommandCurrent() {
-            return setting.GetNode().SubCategory(command).SubCategory(current);
+            return setting.GetNode().Find(@"SettingDef").SubCategory(command).SubCategory(current);
         }
 
         #endregion -- Getter --
@@ -131,8 +131,8 @@ namespace JobInfrastructure {
         }
 
         private void ApplySetting(string arg) {
-            command = setting.GetNode().SubCategory(arg).Attr(@"StartCommand").GetNodeValue();
-            foreach (NodeEntity n in setting.GetNode().SubCategory(command).GetChildren()) {
+            command = setting.GetNode().Find(@"SettingDef").SubCategory(arg).Attr(@"StartCommand").GetNodeValue();
+            foreach (NodeEntity n in setting.GetNode().Find(@"SettingDef").SubCategory(command).GetChildren()) {
                 if (n.GetNodeName().Equals(@"Category") && n.AttrExists(@"description") && n.AttrByName(@"description").Equals(@"root")) {
                     current = n.AttrByName(@"name");
                     onSuccess = n.Attr(@"OnSuccess").GetNodeValue();
@@ -174,7 +174,7 @@ namespace JobInfrastructure {
         }
 
         private void FindNextCommandOnSuccess() {
-            foreach (NodeEntity n in setting.GetNode().SubCategory(command).GetChildren()) {
+            foreach (NodeEntity n in setting.GetNode().Find(@"SettingDef").SubCategory(command).GetChildren()) {
                 if (n.GetNodeName().Equals(@"Category") && n.AttrExists(@"name") && n.AttrByName(@"name").Equals(onSuccess)) {
                     current = n.AttrByName(@"name");
                     onSuccess = n.Attr(@"OnSuccess").GetNodeValue();
@@ -185,7 +185,7 @@ namespace JobInfrastructure {
         }
 
         private void FindNextCommandOnFailure() {
-            foreach (NodeEntity n in setting.GetNode().SubCategory(command).GetChildren()) {
+            foreach (NodeEntity n in setting.GetNode().Find(@"SettingDef").SubCategory(command).GetChildren()) {
                 if (n.GetNodeName().Equals(@"Category") && n.AttrExists(@"name") && n.AttrByName(@"name").Equals(onFailure)) {
                     current = n.AttrByName(@"name");
                     onSuccess = n.Attr(@"OnSuccess").GetNodeValue();
